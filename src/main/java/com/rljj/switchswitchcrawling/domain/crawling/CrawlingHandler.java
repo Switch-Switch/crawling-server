@@ -21,7 +21,12 @@ public class CrawlingHandler {
     @Value("${crawling.url}")
     private String url;
 
-    @Scheduled(fixedRate = 1000000) // TODO 시간 설정
+    /**
+     * 스케줄링 메서드 <br />
+     * 기본: 새벽 3시에 작업 시작 <br />
+     * 바로 실행해보고 싶으면 @Scheduled(fixedRate = 1000000)로 설정
+     */
+    @Scheduled(cron = "0 0 3 * * ?")
     public void crawl() {
         log.info("Crawling start, URL: {}", url);
         try {
