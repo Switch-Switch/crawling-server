@@ -1,18 +1,21 @@
 package com.rljj.switchswitchcrawling.domain.crawling;
 
-import com.rljj.switchswitchcrawling.domain.chiptype.CrawledChip;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CrawlingNintendoStore implements CrawlingRunner {
+
+    @Value("${crawling.product-list-limit}")
+    private int productListLimit;
 
     /**
      * 크롤링 후 CrawledChip 객체로 변환
@@ -24,9 +27,10 @@ public class CrawlingNintendoStore implements CrawlingRunner {
     @Override
     public List<CrawledChip> crawl(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
-        System.out.println(document);
-
-        return List.of();
+        return document.getElementsByClass("item product product-item")
+                .stream()
+                .map(CrawledChip::from)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -39,6 +43,7 @@ public class CrawlingNintendoStore implements CrawlingRunner {
     public int getPageSize(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
         Element element = document.getElementById("toolbar-amount");
-        return Integer.parseInt(Objects.requireNonNull(element).text().split(" ")[2]);
+        double totalItemCount = Double.parseDouble(Objects.requireNonNull(element).text().split(" ")[2]);
+        return (int) Math.ceil(totalItemCount / productListLimit);
     }
 }

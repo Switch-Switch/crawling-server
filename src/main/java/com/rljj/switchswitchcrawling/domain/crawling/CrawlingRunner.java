@@ -1,7 +1,5 @@
 package com.rljj.switchswitchcrawling.domain.crawling;
 
-import com.rljj.switchswitchcrawling.domain.chiptype.CrawledChip;
-
 import java.io.IOException;
 import java.util.List;
 
