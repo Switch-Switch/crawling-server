@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CrawlingRunnerImpl implements CrawlingRunner {
+
+    @Value("${crawling.url}")
+    public String url;
+
     @Override
     public void crawl() {
 

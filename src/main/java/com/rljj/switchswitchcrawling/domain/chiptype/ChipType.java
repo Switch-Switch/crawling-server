@@ -19,6 +19,9 @@ public class ChipType {
     private String name;
 
     @Column(nullable = false)
+    private String engName;
+
+    @Column(nullable = false)
     private String imageName;
 
     private int price;
