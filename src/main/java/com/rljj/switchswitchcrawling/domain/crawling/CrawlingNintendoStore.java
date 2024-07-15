@@ -41,9 +41,20 @@ public class CrawlingNintendoStore implements CrawlingRunner {
      */
     @Override
     public int getPageSize(String url) throws IOException {
+        double totalItemCount = getTotalItemSize(url);
+        return (int) Math.ceil(totalItemCount / productListLimit);
+    }
+
+    /**
+     * 전체 상품 개수 가져오는 메서드
+     *
+     * @return 상품 개수
+     * @throws IOException 크롤링 실패
+     */
+    @Override
+    public int getTotalItemSize(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
         Element element = document.getElementById("toolbar-amount");
-        double totalItemCount = Double.parseDouble(Objects.requireNonNull(element).text().split(" ")[2]);
-        return (int) Math.ceil(totalItemCount / productListLimit);
+        return Integer.parseInt(Objects.requireNonNull(element).text().split(" ")[2]);
     }
 }

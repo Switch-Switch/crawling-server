@@ -7,4 +7,6 @@ public interface CrawlingRunner {
     List<CrawledChip> crawl(String url) throws IOException;
 
     int getPageSize(String url) throws IOException;
+
+    int getTotalItemSize(String url) throws IOException;
 }
