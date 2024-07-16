@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "chip_type")
+@Table(name = "chip_type", indexes = {
+        @Index(name = "idx_name", columnList = "name")
+})
 public class ChipType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
