@@ -1,13 +1,14 @@
 package com.rljj.switchswitchcrawling.domain.chiptype;
 
 import com.rljj.switchswitchcrawling.domain.crawling.CrawledChip;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class ChipTypeService {
 
@@ -18,6 +19,7 @@ public class ChipTypeService {
         chipTypeRepository.saveAll(chips.stream().map(ChipType::from).toList());
     }
 
+    @Transactional
     public void save(CrawledChip chip) {
         chipTypeRepository.save(ChipType.from(chip));
     }
