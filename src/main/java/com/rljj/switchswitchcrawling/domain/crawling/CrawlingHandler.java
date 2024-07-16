@@ -18,8 +18,8 @@ public class CrawlingHandler {
     private final CrawlingRunner crawlingRunner;
     private final ChipTypeService chipTypeService;
 
-    @Value("${crawling.url}")
-    private String url;
+    @Value("${crawling.baseUrl}")
+    private String baseUrl;
 
     /**
      * 스케줄링 메서드 <br/><br/>
@@ -38,15 +38,17 @@ public class CrawlingHandler {
     }
 
     private void initialize() {
-        log.info("Starts the crawl initialization. URL: {}", url);
+        log.info("Starts the crawl initialization. URL: {}", baseUrl);
         try {
             int pageSize = getPageSize();
+            String url = getUrlWithPage();
 
             for (int i = pageSize; i > 0; i--) { // 오래된 순부터
-                List<CrawledChip> chips = crawlingRunner.crawl(url + "&p=" + i);
+                List<CrawledChip> chips = crawlingRunner.crawl(url + i);
                 chipTypeService.saveBulk(chips);
                 sleepZZ(i);
             }
+
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
@@ -56,19 +58,20 @@ public class CrawlingHandler {
 
     private boolean isOutdated() {
         try {
-            return chipTypeService.getCount() < crawlingRunner.getTotalItemSize(url);
+            return chipTypeService.getCount() < crawlingRunner.getTotalItemSize(baseUrl);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void update() {
-        log.info("Start the crawl update. URL: {}", url);
+        log.info("Start the crawl update. URL: {}", baseUrl);
         try {
             int pageSize = getPageSize();
+            String url = getUrlWithPage();
 
             for (int i = 1; i <= pageSize; i++) { // 최신 순부터
-                List<CrawledChip> chips = crawlingRunner.crawl(url + "&p=" + i);
+                List<CrawledChip> chips = crawlingRunner.crawl(url + i);
                 for (CrawledChip chip : chips) {
                     if (isExist(chip.getName())) return;
                     chipTypeService.save(chip);
@@ -84,7 +87,7 @@ public class CrawlingHandler {
     }
 
     private int getPageSize() throws IOException {
-        int pageSize = crawlingRunner.getPageSize(url);
+        int pageSize = crawlingRunner.getPageSize(baseUrl);
         log.info("pageSize: {}", pageSize);
         return pageSize;
     }
@@ -96,5 +99,9 @@ public class CrawlingHandler {
     private void sleepZZ(int page) throws InterruptedException {
         log.info("Thread sleep, current page: {}", page);
         Thread.sleep(2000);
+    }
+
+    private String getUrlWithPage() {
+        return baseUrl + "&" + crawlingRunner.getUrlPageParameterKey() + "=";
     }
 }

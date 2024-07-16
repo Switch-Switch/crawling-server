@@ -9,4 +9,6 @@ public interface CrawlingRunner {
     int getPageSize(String url) throws IOException;
 
     int getTotalItemSize(String url) throws IOException;
+
+    String getUrlPageParameterKey();
 }

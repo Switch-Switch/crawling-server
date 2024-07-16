@@ -57,4 +57,9 @@ public class CrawlingNintendoStore implements CrawlingRunner {
         Element element = document.getElementById("toolbar-amount");
         return Integer.parseInt(Objects.requireNonNull(element).text().split(" ")[2]);
     }
+
+    @Override
+    public String getUrlPageParameterKey() {
+        return "p";
+    }
 }
