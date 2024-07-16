@@ -1,13 +1,16 @@
 package com.rljj.switchswitchcrawling.domain.chiptype;
 
+import com.rljj.switchswitchcrawling.domain.crawling.CrawledChip;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "chip_type")
 public class ChipType {
@@ -19,13 +22,21 @@ public class ChipType {
     private String name;
 
     @Column(nullable = false)
-    private String imageName;
+    private String imageUrl;
 
-    private int price;
+    private String price;
 
-    @Column(nullable = false)
-    @ColumnDefault("'nintendo'")
     private String consoleModel;
 
-    private LocalDateTime crawled_date;
+    private LocalDateTime createdDate;
+
+    public static ChipType from(CrawledChip chip) {
+        return ChipType.builder()
+                .name(chip.getName())
+                .imageUrl(chip.getImageUrl())
+                .price(chip.getPrice())
+                .consoleModel(chip.getConsoleModel())
+                .createdDate(LocalDateTime.now())
+                .build();
+    }
 }
