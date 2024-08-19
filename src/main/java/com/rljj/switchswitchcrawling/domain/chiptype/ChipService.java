@@ -10,25 +10,25 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class ChipTypeService {
+public class ChipService {
 
-    private final ChipTypeRepository chipTypeRepository;
+    private final ChipRepository chipRepository;
 
     @Transactional
     public void saveBulk(List<CrawledChip> chips) {
-        chipTypeRepository.saveAll(chips.stream().map(ChipType::from).toList());
+        chipRepository.saveAll(chips.stream().map(Chip::from).toList());
     }
 
     @Transactional
     public void save(CrawledChip chip) {
-        chipTypeRepository.save(ChipType.from(chip));
+        chipRepository.save(Chip.from(chip));
     }
 
     public long getCount() {
-        return chipTypeRepository.count();
+        return chipRepository.count();
     }
 
     public boolean isExist(String name) {
-        return chipTypeRepository.findByName(name).isPresent();
+        return chipRepository.findByName(name).isPresent();
     }
 }

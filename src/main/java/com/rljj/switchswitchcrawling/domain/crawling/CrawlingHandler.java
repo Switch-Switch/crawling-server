@@ -1,6 +1,6 @@
 package com.rljj.switchswitchcrawling.domain.crawling;
 
-import com.rljj.switchswitchcrawling.domain.chiptype.ChipTypeService;
+import com.rljj.switchswitchcrawling.domain.chiptype.ChipService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import java.util.List;
 public class CrawlingHandler {
 
     private final CrawlingRunner crawlingRunner;
-    private final ChipTypeService chipTypeService;
+    private final ChipService chipService;
 
     @Value("${crawling.baseUrl}")
     private String baseUrl;
@@ -29,12 +29,12 @@ public class CrawlingHandler {
 //    @Scheduled(fixedRate = 1000000)
     @Scheduled(cron = "0 0 3 * * ?")
     public void crawl() {
-        if (isFirst()) initialize();
-        if (isOutdated()) update();
+//        if (isFirst()) initialize();
+//        if (isOutdated()) update();
     }
 
     private boolean isFirst() {
-        return chipTypeService.getCount() == 0;
+        return chipService.getCount() == 0;
     }
 
     private void initialize() {
@@ -45,7 +45,7 @@ public class CrawlingHandler {
 
             for (int i = pageSize; i > 0; i--) { // 오래된 순부터
                 List<CrawledChip> chips = crawlingRunner.crawl(url + i);
-                chipTypeService.saveBulk(chips);
+                chipService.saveBulk(chips);
                 sleepZZ(i);
             }
 
@@ -58,7 +58,7 @@ public class CrawlingHandler {
 
     private boolean isOutdated() {
         try {
-            return chipTypeService.getCount() < crawlingRunner.getTotalItemSize(baseUrl);
+            return chipService.getCount() < crawlingRunner.getTotalItemSize(baseUrl);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -74,7 +74,7 @@ public class CrawlingHandler {
                 List<CrawledChip> chips = crawlingRunner.crawl(url + i);
                 for (CrawledChip chip : chips) {
                     if (isExist(chip.getName())) return;
-                    chipTypeService.save(chip);
+                    chipService.save(chip);
                 }
                 sleepZZ(i);
             }
@@ -93,7 +93,7 @@ public class CrawlingHandler {
     }
 
     private boolean isExist(String name) {
-        return chipTypeService.isExist(name);
+        return chipService.isExist(name);
     }
 
     private void sleepZZ(int page) throws InterruptedException {

@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "chip_type", indexes = {
+@Table(name = "chip", indexes = {
         @Index(name = "idx_name", columnList = "name")
 })
-public class ChipType {
+public class Chip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,8 +32,8 @@ public class ChipType {
 
     private LocalDateTime createdDate;
 
-    public static ChipType from(CrawledChip chip) {
-        return ChipType.builder()
+    public static Chip from(CrawledChip chip) {
+        return Chip.builder()
                 .name(chip.getName())
                 .imageUrl(chip.getImageUrl())
                 .price(chip.getPrice())
