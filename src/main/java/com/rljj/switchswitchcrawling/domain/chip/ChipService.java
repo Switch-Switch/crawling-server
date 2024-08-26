@@ -1,4 +1,4 @@
-package com.rljj.switchswitchcrawling.domain.chiptype;
+package com.rljj.switchswitchcrawling.domain.chip;
 
 import com.rljj.switchswitchcrawling.domain.crawling.CrawledChip;
 import lombok.RequiredArgsConstructor;

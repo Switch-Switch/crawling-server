@@ -1,6 +1,6 @@
 package com.rljj.switchswitchcrawling.domain.crawling;
 
-import com.rljj.switchswitchcrawling.domain.chiptype.ChipService;
+import com.rljj.switchswitchcrawling.domain.chip.ChipService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

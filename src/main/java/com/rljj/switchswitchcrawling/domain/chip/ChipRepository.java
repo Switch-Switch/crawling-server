@@ -1,4 +1,4 @@
-package com.rljj.switchswitchcrawling.domain.chiptype;
+package com.rljj.switchswitchcrawling.domain.chip;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
